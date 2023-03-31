@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HiOutlineMenu } from 'react-icons/hi';
+import { AiOutlineClose,AiOutlineArrowRight } from 'react-icons/ai';
 
 export default function Home() {
   return (
@@ -14,23 +16,64 @@ export default function Home() {
       <main>
         <nav className={styles.navBar}>
           <ul className={styles.navSection}>
-            <li className={styles.brandSection}>
+            <li className={styles.responsiveMenuItems}>
               <span className={styles.brandName}>Real Fast</span>
-              <Image width={30} height={38} src='/realfast_logo.png'/>
             </li>
             <li>
+              <Image width={30} height={38} src='/realfast_logo.png' alt='real fast logo'/>
+            </li>
+
+            <li className={styles.responsiveMenuItems}>
               <Link href='#' className={styles.navText}>Find Jobs</Link>
             </li>
           </ul>
 
           <ul className={styles.navSection}>
-            <li className={styles.seperator}>
+            <li className={styles.responsiveMenuItems} 
+            style={{borderRight:'2px solid gray',paddingRight:8}}>
               <Link href='#' className={styles.navText}>Sign in</Link>
             </li>
-            <li>
+            <li className={styles.responsiveMenuItems}>
               <Link href='#' className={styles.navText}>Post a job</Link>
             </li>
+            <li>
+              <HiOutlineMenu className={styles.menu}/>
+            </li>
           </ul>
+        </nav>
+
+        <nav className={styles.mobileNav}>
+          <AiOutlineClose className={styles.mobileMenuClose}/>
+
+          <div className={styles.halfScreenMenuBlock}>
+            <ul className={styles.mobileMenuItems}>
+              <li className={styles.mobileMenuItem}>
+                <Link href='#' className={styles.mobileMenuText}>Home</Link>
+              </li>
+              <li className={styles.mobileMenuItem}>
+                <Link href='#' className={styles.mobileMenuText}>Find Jobs</Link>
+              </li>
+              <li className={styles.mobileMenuItem}>
+                <Link href='#' className={styles.mobileMenuText}>Pricing</Link>
+              </li>
+              <li className={styles.mobileMenuItem}>
+                <Link href='#' className={styles.mobileMenuText}>Support</Link>
+              </li>
+              <li className={styles.mobileMenuItem}>
+                <Link href='#' className={styles.mobileMenuText}>Contact us</Link>
+              </li>
+            </ul>
+
+            <div className={styles.mobileBottomItems}>
+              <Link href='#' className={styles.signinBtn}>
+                <span className={styles.btnItems}>Sign in</span>
+                <AiOutlineArrowRight className={styles.btnItems}/></Link>
+              <Link href='#' className={styles.createAcctBtn}>
+                <span>Create account</span>
+                <AiOutlineArrowRight />
+               </Link>
+            </div>
+          </div>
         </nav>
       </main>
     </>
@@ -40,8 +83,18 @@ export default function Home() {
 const styles = {
   navBar:'h-[60px] flex flex-row justify-between items-center px-3 border border-gray-200 shadow-md',
   navSection:'flex flex-row space-x-3',
-  brandSection:'flex flex-row gap-2',
   brandName:'font-reading text-2xl text-purple-600 font-bold',
   navText:'text-gray-700 hover:text-purple-600',
-  seperator:'border-r-2 border-gray-400 pr-3'
+  responsiveMenuItems:'hidden sm:block',
+  menu:'w-[38px] h-[38px] text-gray-500',
+  mobileNav:'h-screen w-full bg-black/80 absolute top-0 left-0',
+  halfScreenMenuBlock:'h-screen min-w-[300px] max-w-[420px] flex flex-col justify-between bg-black absolute right-0 top-0',
+  mobileMenuClose:'text-gray-600 w-[38px] h-[38px] absolute top-2 right-2 z-10',
+  mobileMenuItems:'flex flex-col gap-3 pt-[60px] pr-4',
+  mobileMenuItem:'text-end',
+  mobileMenuText:'text-[20px] font-reading text-gray-400',
+  mobileBottomItems:'px-3',
+  signinBtn:'block w-full h-[58px] flex flex-row justify-between items-center px-3 bg-pink-400 rounded-md',
+  btnItems:'text-xl',
+  createAcctBtn:''
 }
