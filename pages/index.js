@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import MainNav from '@/components/MainNav';
+import Footer from '@/components/Footer';
 
 export default function Home() {
 
@@ -13,6 +14,8 @@ export default function Home() {
       </Head>
       <main>
         <MainNav/>
+
+        <Footer/>
       </main>
     </>
   )

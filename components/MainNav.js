@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiOutlineMenu } from 'react-icons/hi';
-import { navbarStyles } from '@/utilities/navbar.styles';
+import { navbarStyles } from '@/utilities/styles/navbar.styles';
 import { AiOutlineClose,AiOutlineArrowRight } from 'react-icons/ai';
 
 export default function MainNav() {
