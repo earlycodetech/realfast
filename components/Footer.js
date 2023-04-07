@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ImFacebook2 } from 'react-icons/im';
 import { AiFillInstagram,AiFillTwitterCircle,AiFillYoutube } from "react-icons/ai";
-import { footerStyles } from "@/utilities/styles/footer.styles";
 
 export default function Footer () {
     const year = new Date().getFullYear();
@@ -38,4 +37,13 @@ export default function Footer () {
             </ul>
         </footer>
     )
+}
+
+const footerStyles = {
+    footer:'w-full flex flex-row justify-between bg-indigo-950 py-3 px-4',
+    copyrights:'',
+    socialBlock:'',
+    icon:'',
+    legalBlock:'',
+    legalText:''
 }
