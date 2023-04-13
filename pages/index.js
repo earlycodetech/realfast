@@ -1,9 +1,6 @@
 import Head from 'next/head';
-import MainNav from '@/components/MainNav';
-import Footer from '@/components/Footer';
 
 export default function Home() {
-
   return (
     <>
       <Head>
@@ -13,9 +10,7 @@ export default function Home() {
         <link rel="icon" href="/realfast_logo.png" />
       </Head>
       <main>
-        <MainNav/>
-
-        <Footer/>
+ 
       </main>
     </>
   )
