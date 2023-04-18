@@ -1,8 +1,16 @@
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 import JobCard from "@/components/JobCard"; 
 import { jobsData } from "@/data/jobsdata";
 
 export default function AboutUs () {
+    const router = useRouter();
+    
+    // setTimeout(() => {
+    //     return router.push('/search')
+    // },3000)
+
+    //console.log(router.query.keyword);
 
     //run something after page has been render
     useEffect(() => {
@@ -11,8 +19,6 @@ export default function AboutUs () {
         for(let count = 0;count < 100;count++){
             rNums.push(Math.round(Math.random() * 100000));
         }
-
-        console.log(rNums);
     },[]);
 
     return (

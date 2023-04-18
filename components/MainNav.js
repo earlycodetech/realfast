@@ -12,14 +12,14 @@ export default function MainNav() {
             <nav className={navbarStyles.navBar} id='mainNav'>
             <ul className={navbarStyles.navSection}>
                 <li className={navbarStyles.responsiveMenuItems}>
-                <span className={navbarStyles.brandName}>Real Fast</span>
+                    <Link href='/' className={navbarStyles.brandName}>Real Fast</Link>
                 </li>
                 <li>
-                <Image width={30} height={38} src='/realfast_logo.png' alt='real fast logo'/>
+                    <Image width={30} height={38} src='/realfast_logo.png' alt='real fast logo'/>
                 </li>
 
                 <li className={navbarStyles.responsiveMenuItems}>
-                <Link href='#' className={navbarStyles.navText}>Find Jobs</Link>
+                    <Link href='#' className={navbarStyles.navText}>Find Jobs</Link>
                 </li>
             </ul>
 
