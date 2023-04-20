@@ -52,6 +52,6 @@ const styles = {
   search:'w-full border border-indigo-200 rounded-full py-5 px-3',
   searchBtn:'flex justify-center items-center bg-indigo-800 text-white px-3 py-5 rounded-full cursor-pointer',
   message:'text-center mt-2',
-  otherActions:'flex flex-row gap-4 justify-center',
-  quickFinder:'md:w-[200px] md:h-[120px] bg-indigo-800 rounded-xl text-lg text-indigo-200'
+  otherActions:'flex flex-col md:flex-row gap-4 md:justify-center',
+  quickFinder:'md:w-[200px] h-[60px] md:h-[120px] bg-indigo-800 rounded-xl text-lg text-indigo-200'
 }
