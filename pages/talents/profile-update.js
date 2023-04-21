@@ -1,5 +1,16 @@
 import { useState,useEffect } from "react";
 import Head from "next/head";
+import { useFormik } from "formik";
+import * as yup from 'yup';
+
+//create a validation schema (validation rules)
+const fieldsSchema = yup.object().shape({
+    firstName:yup.string().required('Hey,fill this field').min(2,'Please enter two or chars'),
+    lastName:yup.string().required('Hey,fill this field').min(2,'Please enter two or chars'),
+    phoneNumber:yup.string().required().min(10).max(17),
+    address:yup.string().required('Hey,fill this field').min(18),
+    gender:yup.string().notOneOf(['Not specified']),
+});
 
 export default function ProfileUpdate () {
     const [screenHeight,setScreenHeight] = useState(0);
@@ -7,6 +18,22 @@ export default function ProfileUpdate () {
     useEffect(() => {
         setScreenHeight(window.innerHeight - 60);
     },[]);
+
+    const { values,handleBlur,handleChange,errors,handleSubmit,touched } = useFormik({
+        validationSchema:fieldsSchema,
+        initialValues:{
+            firstName:'',
+            lastName:'',
+            phoneNumber:'',
+            address:'',
+            dob:'',
+            gender:''
+        },
+        onSubmit:(values) => {
+            //get field values here and perform any operation
+            console.log(values.firstName);
+        } 
+    });
 
     return (
         <>
@@ -20,55 +47,104 @@ export default function ProfileUpdate () {
             <div className={styles.wrapper}>
                 <h2 className={styles.title}>Update your profile</h2>
 
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className={styles.inputBlockRow}>
                         <div className={styles.inputBlock}>
                             <label className={styles.label}>first name</label>
                             <input 
+                            id="firstName"
                             type="text" 
                             placeholder="first and middle name"
-                            className={styles.inputField}/>
+                            className={styles.inputField}
+                            value={values.firstName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}/>
+                            {
+                                errors.firstName && touched.firstName 
+                                ? <p className={styles.formError} style={{color:'red'}}>{errors.firstName}</p>
+                                : null
+                            }
                         </div>
                         <div className={styles.inputBlock}>
                             <label className={styles.label}>last name</label>
                             <input 
+                            id="lastName"
                             type="text" 
                             placeholder="surname"
-                            className={styles.inputField}/>
+                            className={styles.inputField}
+                            value={values.lastName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}/>
+                            {
+                                errors.lastName && touched.lastName 
+                                ? <p className={styles.formError} style={{color:'red'}}>{errors.lastName}</p>
+                                : null
+                            }
                         </div>
                     </div>
 
                     <div className={styles.inputBlockMain}>
                         <label className={styles.label}>Phone number</label>
                         <input 
+                        id="phoneNumber"
                         type="tel" 
                         placeholder="phone number"
-                        className={styles.inputField}/>
+                        className={styles.inputField}
+                        value={values.phoneNumber}
+                        onChange={handleChange}
+                        onBlur={handleBlur}/>
+                        {
+                            errors.phoneNumber && touched.phoneNumber 
+                            ? <p className={styles.formError} style={{color:'red'}}>{errors.phoneNumber}</p>
+                            : null
+                        }
                     </div>
 
                     <div className={styles.inputBlockMain}>
                         <label className={styles.label}>Address</label>
                         <input 
+                        id="address"
                         type="text" 
                         placeholder="contact address"
-                        className={styles.inputField}/>
+                        className={styles.inputField}
+                        value={values.address}
+                        onChange={handleChange}
+                        onBlur={handleBlur}/>
+                        {
+                            errors.address && touched.address 
+                            ? <p className={styles.formError} style={{color:'red'}}>{errors.address}</p>
+                            : null
+                        }
                     </div>
 
                     <div className={styles.inputBlockRow}>
                         <div className={styles.inputBlock}>
                             <label className={styles.label}>Date of birth</label>
                             <input 
+                            id="dob"
                             type="date" 
-                            className={styles.inputField}/>
+                            className={styles.inputField}
+                            value={values.dob}
+                            onChange={handleChange}
+                            onBlur={handleBlur}/>
                         </div>
                         <div className={styles.inputBlock}>
                             <label className={styles.label}>Gender</label>
                             <select
-                            className={styles.inputField}>
+                            id="gender"
+                            className={styles.inputField}
+                            value={values.gender}
+                            onChange={handleChange}
+                            onBlur={handleBlur}>
                                 <option value='Not specified'>not specified</option>
                                 <option value='Female'>female</option>
                                 <option value='Male'>male</option>
                             </select>
+                            {
+                                errors.gender && touched.gender 
+                                ? <p className={styles.formError} style={{color:'red'}}>{errors.gender}</p>
+                                : null
+                            }
                         </div>
                     </div>
 
@@ -89,5 +165,6 @@ const styles = {
     inputBlockMain:'w-full mb-4',
     label:'text-gray-500 mb-2',
     inputField:'w-full block border border-gray-200 py-5 px-4 rounded-full',
-    submitBtn:'w-full bg-indigo-800 py-5 px-4 rounded-full text-lg text-white'
+    submitBtn:'w-full bg-indigo-800 py-5 px-4 rounded-full text-lg text-white',
+    formError:'text-xs'
 }
