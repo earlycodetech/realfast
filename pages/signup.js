@@ -79,7 +79,6 @@ export default function ProfileUpdate () {
                         </div>
                         <div className={styles.inputBlock}>
                             <label className={styles.label}>Confirm password</label>
-                            <label className={styles.label}>Create password</label>
                             <input 
                             id="passwordConfirmation"
                             type="password" 
