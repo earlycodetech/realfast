@@ -5,18 +5,15 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import { auth } from "@/settings/firebase/firebase.setup";
-import { createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
-
-const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/; //regular expression
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 //create a validation schema (validation rules)
 const fieldsSchema = yup.object().shape({
     email:yup.string().email('enter a valid email').required('Required'),
-    password:yup.string().min(5).matches(passwordRules,{message:'Please create a stronger password'}).required('Required'),
-    passwordConfirmation:yup.string().oneOf([yup.ref('password'),null],'password must match')
+    password:yup.string().required('Required'),
 });
 
-export default function ProfileUpdate () {
+export default function Signin () {
     const [screenHeight,setScreenHeight] = useState(0);
     const { uid,setUid,email,setEmail } = useContext(AppContext);
 
@@ -31,13 +28,10 @@ export default function ProfileUpdate () {
         initialValues:{
             email:'',
             password:'',
-            passwordConfirmation:''
         },
         onSubmit:(values) => {
-            createUserWithEmailAndPassword(auth,values.email,values.password)
+            signInWithEmailAndPassword(auth,values.email,values.password)
             .then(() => {
-                console.log('Account signup was successfull');
-                
                 onAuthStateChanged(auth,(user) => {
                     setUid(user.uid);
                     setEmail(user.email);
@@ -45,21 +39,21 @@ export default function ProfileUpdate () {
 
                 router.push('/talents/profile-update')
             })
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
         } 
     });
 
     return (
         <>
         <Head>
-            <title>Create Account | Real Fast</title>
-            <meta name="description" content="Create an account on Real Fast and start applying for jobs" />
+            <title>Sign in | Real Fast</title>
+            <meta name="description" content="Sign in to Real Fast and start applying for jobs" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/realfast_logo.png" />
         </Head>
         <main className={styles.container} style={{height:`${screenHeight}px`}}>
             <div className={styles.wrapper}>
-                <h2 className={styles.title}>Create a RealFast account</h2>
+                <h2 className={styles.title}>Sign in to your RealFast account</h2>
 
                 <form autoComplete="off" onSubmit={handleSubmit}>
                     <div className={styles.inputBlockMain}>
@@ -79,35 +73,23 @@ export default function ProfileUpdate () {
                         }
                     </div>
 
-                    <div className={styles.inputBlockRow}>
-                        <div className={styles.inputBlock}>
-                            <label className={styles.label}>Create password</label>
-                            <input 
-                            id="password"
-                            type="password" 
-                            className={styles.inputField}
-                            value={values.password}
-                            onChange={handleChange}
-                            onBlur={handleBlur}/>
-                            {
-                                errors.password && touched.password 
-                                ? <p className={styles.formError} style={{color:'red'}}>{errors.password}</p>
-                                : null
-                            }
-                        </div>
-                        <div className={styles.inputBlock}>
-                            <label className={styles.label}>Confirm password</label>
-                            <input 
-                            id="passwordConfirmation"
-                            type="password" 
-                            className={styles.inputField}
-                            value={values.passwordConfirmation}
-                            onChange={handleChange}
-                            onBlur={handleBlur}/>
-                        </div>
+                    <div className={styles.inputBlockMain}>
+                        <label className={styles.label}>Password</label>
+                        <input 
+                        id="password"
+                        type="password" 
+                        className={styles.inputField}
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}/>
+                        {
+                            errors.password && touched.password 
+                            ? <p className={styles.formError} style={{color:'red'}}>{errors.password}</p>
+                            : null
+                        }
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>Create Account</button>
+                    <button type="submit" className={styles.submitBtn}>Sign in</button>
                 </form>
             </div>
         </main>

@@ -1,4 +1,5 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useContext } from "react";
+import { AppContext } from "@/settings/context/appContext";
 import Head from "next/head";
 import { useFormik } from "formik";
 import * as yup from 'yup';
@@ -14,6 +15,7 @@ const fieldsSchema = yup.object().shape({
 
 export default function ProfileUpdate () {
     const [screenHeight,setScreenHeight] = useState(0);
+    const { uid,email } = useContext(AppContext);
 
     useEffect(() => {
         setScreenHeight(window.innerHeight - 60);
@@ -45,7 +47,7 @@ export default function ProfileUpdate () {
         </Head>
         <main className={styles.container} style={{minHeight:`${screenHeight}px`}}>
             <div className={styles.wrapper}>
-                <h2 className={styles.title}>Update your profile</h2>
+                <h2 className={styles.title}>Update your profile </h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className={styles.inputBlockRow}>

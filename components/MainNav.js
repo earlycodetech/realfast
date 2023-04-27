@@ -1,14 +1,29 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
+import { AppContext } from '@/settings/context/appContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { AiOutlineClose,AiOutlineArrowRight } from 'react-icons/ai';
 import { useRouter } from 'next/router';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/settings/firebase/firebase.setup';
 
 export default function MainNav() {
     const [showMobileNav,setShowMobileNav] = useState(false);
+    const { uid,setUid,email,setEmail } = useContext(AppContext);
 
     const router = useRouter();
+
+    const handleFirebaseSignout = async () => {
+        await signOut(auth)
+        .then(() => {
+            setUid(undefined);
+            setEmail(undefined);
+
+            //redirect the user to sign in page
+            router.push('/signin')
+        })
+    }
 
     return (
         <div>
@@ -80,21 +95,41 @@ export default function MainNav() {
                 </li>
                 </ul>
 
-                <div className={navbarStyles.mobileBottomItems}>
-                    <Link href='#' className={navbarStyles.authBtn} onClick={() => setShowMobileNav(false)}>
-                        <span className={navbarStyles.btnItems}>Sign in</span>
-                        <AiOutlineArrowRight className={navbarStyles.btnItems}/>
-                    </Link>
+                
+                    {
+                        uid == undefined 
+                        ? (
+                            <div className={navbarStyles.mobileBottomItems}>
+                                <Link href='/signin' className={navbarStyles.authBtn} onClick={() => setShowMobileNav(false)}>
+                                    <span className={navbarStyles.btnItems}>Sign in</span>
+                                    <AiOutlineArrowRight className={navbarStyles.btnItems}/>
+                                </Link>
 
-                    <Link 
-                    href='#' 
-                    className={navbarStyles.authBtn} 
-                    onClick={() => setShowMobileNav(false)}
-                    style={{backgroundColor:'#3730a3',color:'#fff'}}>
-                        <span className={navbarStyles.btnItems}>Create account</span>
-                        <AiOutlineArrowRight />
-                    </Link>
-                </div>
+                                <Link 
+                                href='/signup' 
+                                className={navbarStyles.authBtn} 
+                                onClick={() => setShowMobileNav(false)}
+                                style={{backgroundColor:'#3730a3',color:'#fff'}}>
+                                    <span className={navbarStyles.btnItems}>Create account</span>
+                                    <AiOutlineArrowRight />
+                                </Link>
+                            </div>
+                        ) 
+                        : (
+                            <div className={navbarStyles.mobileBottomItems}>
+                                <button 
+                                className={navbarStyles.authBtn} 
+                                onClick={() => {
+                                    setShowMobileNav(false);
+                                    handleFirebaseSignout();
+                                }}>
+                                    <span className={navbarStyles.btnItems}>Sign out</span>
+                                    <AiOutlineArrowRight className={navbarStyles.btnItems}/>
+                                </button>
+                            </div>
+                        )
+                    }
+                
             </div>
         </nav>
         </div>
