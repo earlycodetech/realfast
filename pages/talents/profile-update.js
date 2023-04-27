@@ -47,7 +47,7 @@ export default function ProfileUpdate () {
         </Head>
         <main className={styles.container} style={{minHeight:`${screenHeight}px`}}>
             <div className={styles.wrapper}>
-                <h2 className={styles.title}>Update your profile </h2>
+                <h2 className={styles.title}>Update your profile {email == undefined ? null : email}</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className={styles.inputBlockRow}>

@@ -16,7 +16,7 @@ const fieldsSchema = yup.object().shape({
     passwordConfirmation:yup.string().oneOf([yup.ref('password'),null],'password must match')
 });
 
-export default function ProfileUpdate () {
+export default function Signup () {
     const [screenHeight,setScreenHeight] = useState(0);
     const { uid,setUid,email,setEmail } = useContext(AppContext);
 
