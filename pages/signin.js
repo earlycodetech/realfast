@@ -20,6 +20,7 @@ export default function Signin () {
     const router = useRouter();
 
     useEffect(() => {
+        uid ? router.push('/talents/profile-update') : null;//done on client-side
         setScreenHeight(window.innerHeight - 60);
     },[]);
 
