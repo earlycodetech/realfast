@@ -1,28 +1,19 @@
-import { useState,useContext } from 'react';
-import { AppContext } from '@/settings/context/appContext';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { AiOutlineClose,AiOutlineArrowRight } from 'react-icons/ai';
 import { useRouter } from 'next/router';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/settings/firebase/firebase.setup';
+import { useSession,signOut } from 'next-auth/react';
 
 export default function MainNav() {
     const [showMobileNav,setShowMobileNav] = useState(false);
-    const { uid,setUid,email,setEmail } = useContext(AppContext);
+    const { data:session } = useSession();
 
     const router = useRouter();
 
-    const handleFirebaseSignout = async () => {
-        await signOut(auth)
-        .then(() => {
-            setUid(undefined);
-            setEmail(undefined);
-
-            //redirect the user to sign in page
-            router.push('/signin')
-        })
+    const handleFirebaseSignout = () => {
+        
     }
 
     return (
@@ -46,7 +37,11 @@ export default function MainNav() {
             <ul className={navbarStyles.navSection}>
                 <li className={navbarStyles.responsiveMenuItems} 
                 style={{borderRight:'2px solid gray',paddingRight:8}}>
-                <Link href='#' className={navbarStyles.navText}>Sign in</Link>
+                    {
+                        session 
+                        ? <p className={navbarStyles.navText} onClick={() => signOut()}>Sign out</p>
+                        : <Link href='/signin' className={navbarStyles.navText}>Sign in</Link>
+                    }
                 </li>
                 <li className={navbarStyles.responsiveMenuItems}>
                 <Link href='#' className={navbarStyles.navText}>Post a job</Link>
@@ -97,7 +92,7 @@ export default function MainNav() {
 
                 
                     {
-                        uid == undefined 
+                        !session
                         ? (
                             <div className={navbarStyles.mobileBottomItems}>
                                 <Link href='/signin' className={navbarStyles.authBtn} onClick={() => setShowMobileNav(false)}>
@@ -121,7 +116,7 @@ export default function MainNav() {
                                 className={navbarStyles.authBtn} 
                                 onClick={() => {
                                     setShowMobileNav(false);
-                                    handleFirebaseSignout();
+                                    signOut()
                                 }}>
                                     <span className={navbarStyles.btnItems}>Sign out</span>
                                     <AiOutlineArrowRight className={navbarStyles.btnItems}/>
