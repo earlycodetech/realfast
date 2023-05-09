@@ -1,5 +1,6 @@
 import { useState,useEffect,useContext } from "react";
 import { AppContext } from "@/settings/context/appContext";
+import Image from "next/image";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
@@ -36,23 +37,23 @@ export default function Signin () {
         setScreenHeight(window.innerHeight - 60);
     },[]);
 
-        const {values,handleBlur,handleChange,errors,handleSubmit,touched } = useFormik({
-            validationSchema:fieldsSchema,
-            initialValues:{
-                email:'',
-                password:'',
+    const {values,handleBlur,handleChange,errors,handleSubmit,touched } = useFormik({
+        validationSchema:fieldsSchema,
+        initialValues:{
+            email:'',
+            password:'',
         },
         onSubmit:(values) => {
-            signInWithEmailAndPassword(auth,values.email,values.password)
-            .then(() => {
-                onAuthStateChanged(auth,(user) => {
-                    setUid(user.uid);
-                    setEmail(user.email);
-                });
+            // signInWithEmailAndPassword(auth,values.email,values.password)
+            // .then(() => {
+            //     onAuthStateChanged(auth,(user) => {
+            //         setUid(user.uid);
+            //         setEmail(user.email);
+            //     });
 
-                router.push('/talents/profile-update')
-            })
-            .catch(error => console.log(error));
+            //     router.push('/talents/profile-update')
+            // })
+            // .catch(error => console.log(error));
         } 
     });
 
@@ -67,7 +68,7 @@ export default function Signin () {
         <main className={styles.container} style={{height:`${screenHeight}px`}}>
             <div className={styles.wrapper}>
                 <h2 className={styles.title}>Sign in to your RealFast account</h2>
-
+                
                 <form autoComplete="off" onSubmit={handleSubmit}>
                     <div className={styles.inputBlockMain}>
                         <label className={styles.label}>Email address</label>
@@ -102,7 +103,14 @@ export default function Signin () {
                         }
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>Sign in</button>
+                    <button 
+                    type="submit" 
+                    className={styles.submitBtn}
+                    onClick={() => signIn('credentials',{
+                        email:values.email,
+                        password:values.password,
+                        redirect:false,
+                    })}>Sign in</button>
                 </form>
 
                 <p className="text-lg text-center my-2">OR, sign in with</p>
@@ -112,12 +120,6 @@ export default function Signin () {
                     className={styles.signinBtn} 
                     onClick={handleNextAuthSignin}><FcGoogle/></button>
 
-                    <button 
-                    className={styles.signinBtn}
-                    onClick={() => signIn('github')}><AiFillGithub/></button>
-                    <button 
-                    className={styles.signinBtn}
-                    onClick={() => signIn('github')}><AiFillGithub/></button>
                     <button 
                     className={styles.signinBtn}
                     onClick={() => signIn('github')}><AiFillGithub/></button>
