@@ -5,6 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { auth } from '../../../settings/firebase/firebase.setup';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
+import { cert } from 'firebase-admin/app';
 
 export default NextAuth({
     providers:[
@@ -46,7 +47,9 @@ export default NextAuth({
     },
     adapter:FirestoreAdapter({
         credential:cert({
-            
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            privateKey: process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n") : undefined,
         })
     }),
 });
