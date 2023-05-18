@@ -1,6 +1,5 @@
 import { useState,useEffect,useContext } from "react";
 import { AppContext } from "@/settings/context/appContext";
-import Image from "next/image";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
@@ -8,9 +7,10 @@ import * as yup from 'yup';
 import { auth } from "@/settings/firebase/firebase.setup";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { FcGoogle } from 'react-icons/fc';
-import { AiFillGithub } from 'react-icons/ai';
+import { AiFillGithub,AiOutlineUndo } from 'react-icons/ai';
 import { signIn } from 'next-auth/react';
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
+import { nextAuthOptions } from "./api/auth/[...nextauth]";
 
 //create a validation schema (validation rules)
 const fieldsSchema = yup.object().shape({
@@ -20,18 +20,14 @@ const fieldsSchema = yup.object().shape({
 
 export default function Signin () {
     const [screenHeight,setScreenHeight] = useState(0);
+    const [authChoice,setAuthChoice] = useState(false);
     const { uid,setUid,email,setEmail } = useContext(AppContext);
-    const { data:session } = useSession();
-
-    console.log(session);
 
     const router = useRouter();
 
     const handleNextAuthSignin = () => {
         signIn('google');
     }
-
-    session ? router.push('/talents') : null;//done on client-side
 
     useEffect(() => {
         setScreenHeight(window.innerHeight - 60);
@@ -44,16 +40,16 @@ export default function Signin () {
             password:'',
         },
         onSubmit:(values) => {
-            // signInWithEmailAndPassword(auth,values.email,values.password)
-            // .then(() => {
-            //     onAuthStateChanged(auth,(user) => {
-            //         setUid(user.uid);
-            //         setEmail(user.email);
-            //     });
+            signInWithEmailAndPassword(auth,values.email,values.password)
+            .then(() => {
+                onAuthStateChanged(auth,(user) => {
+                    setUid(user.uid);
+                    setEmail(user.email);
+                });
 
-            //     router.push('/talents/profile-update')
-            // })
-            // .catch(error => console.log(error));
+                router.push('/talents/profile-update')
+            })
+            .catch(error => console.log(error));
         } 
     });
 
@@ -70,6 +66,14 @@ export default function Signin () {
                 <h2 className={styles.title}>Sign in to your RealFast account</h2>
                 
                 <form autoComplete="off" onSubmit={handleSubmit}>
+                    <div className="flex justify-end">
+                        <p className="text-md text-indigo-700 flex flex-row gap-3"
+                        onClick={() => authChoice ? setAuthChoice(false) : setAuthChoice(true)}>
+                            <span>Sign in with {authChoice ? 'credentials' : 'email '} instead</span>
+                            <AiOutlineUndo className="text-indigo-500 text-2xl"/>
+                        </p>
+                    </div>
+
                     <div className={styles.inputBlockMain}>
                         <label className={styles.label}>Email address</label>
                         <input 
@@ -87,7 +91,7 @@ export default function Signin () {
                         }
                     </div>
 
-                    <div className={styles.inputBlockMain}>
+                    <div className={styles.inputBlockMain} style={{display:authChoice ? 'none' : 'block'}}>
                         <label className={styles.label}>Password</label>
                         <input 
                         id="password"
@@ -106,11 +110,17 @@ export default function Signin () {
                     <button 
                     type="submit" 
                     className={styles.submitBtn}
-                    onClick={() => signIn('credentials',{
-                        email:values.email,
-                        password:values.password,
-                        redirect:false,
-                    })}>Sign in</button>
+                    onClick={() => {
+                        if(authChoice) {
+                            signIn('email')
+                        } else {
+                            signIn('credentials',{
+                                email:values.email,
+                                password:values.password,
+                                redirect:false,
+                            })
+                        }
+                    }}>Sign in</button>
                 </form>
 
                 <p className="text-lg text-center my-2">OR, sign in with</p>
@@ -122,12 +132,41 @@ export default function Signin () {
 
                     <button 
                     className={styles.signinBtn}
-                    onClick={() => signIn('github')}><AiFillGithub/></button>
+                    ><AiFillGithub/></button>
                 </div>
             </div>
         </main>
         </>
     )
+}
+
+export async function getServerSideProps (context) {
+    const session = await getServerSession(context.req,context.res,nextAuthOptions);
+
+    //if there is an active session, redirect to talent dashboard
+    if(session){
+        if(session.user.accountType == 'talent') {
+            return {
+                redirect:{
+                    destination:'/talents',
+                    permanent:false,
+                }
+            }
+        } else if(session.user.accountType == 'org') {
+            return {
+                redirect:{
+                    destination:'/org',
+                    permanent:false,
+                }
+            }
+        }
+    }
+
+    return {
+        props:{ 
+            session:JSON.parse(JSON.stringify(session))
+        }
+    }
 }
 
 const styles = {
