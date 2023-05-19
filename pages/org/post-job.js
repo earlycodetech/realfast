@@ -17,13 +17,14 @@ export default function PostJob () {
     const [screenHeight,setScreenHeight] = useState(0);
 
     const handleFirestoreWriteDocument = async () => {
-        await setDoc(doc(db,'jobs','info@earlycode.net'),{
+        await addDoc(collection(db,'jobs'),{
             title:values.jobTitle,
             desc:values.description,
             requirements:values.requirements,
             wages:values.wages,
             timestamp:new Date().getTime(),
             status:'active', 
+            url:values.jobTitle.toLowerCase().split(' ').join('-'),
         })
         .then(() => {
             console.log('Posted successfully');
@@ -35,19 +36,6 @@ export default function PostJob () {
         validationSchema:fieldsSchema,
         initialValues:{jobTitle:'',description:'',requirements:'',wages:''},
         onSubmit:(values) => {
-            // addDoc(collection(db,'jobs'),{
-            //     title:values.jobTitle,
-            //     desc:values.description,
-            //     requirements:values.requirements,
-            //     wages:values.wages,
-            //     timestamp:new Date().getTime(),
-            //     status:'active'
-            // })
-            // .then(() => {
-            //     console.log('Posted successfully');
-            // })
-            // .catch(error => console.log(error))
-
             handleFirestoreWriteDocument();
         } 
     });
