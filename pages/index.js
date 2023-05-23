@@ -38,7 +38,7 @@ export default function Home() {
 
           <div className={styles.otherActions}>
             <Link href='/jobs' className={styles.quickFinder}>Recent jobs</Link>
-            <Link href='#' className={styles.quickFinder}>High paying jobs</Link>
+            <Link href='/jobs?by=salary' className={styles.quickFinder}>High paying jobs</Link>
             <Link href='#' className={styles.quickFinder}>Closing soon</Link>
           </div>
         </div>

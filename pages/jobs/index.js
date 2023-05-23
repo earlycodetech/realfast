@@ -1,13 +1,23 @@
+import { useState,useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { db } from "@/settings/firebase/firebase.setup";
-import { getDocs,collection,query,orderBy } from "firebase/firestore";
+import { doc,getDocs,collection } from "firebase/firestore";
+
+//headless cms
 
 export async function getStaticProps() {
-    const jobs = [];
+    const jobs = []
 
-    const q = query(collection(db,'jobs'),orderBy('timestamp','desc'))
-    const onSnap = await getDocs(q);
+    const onSnap = await doc(collection(db,'jobs'));
+    // setJobs(onSnap.docs.map(document => {
+    //     return {
+    //         id:document.id,
+    //         data:{
+    //             ...document.data()
+    //         }
+    //     }
+    // }));
 
     onSnap.forEach(document => {
         jobs.push({
@@ -33,28 +43,24 @@ export default function Jobs ({jobsData}) {
             <link rel="icon" href="/realfast_logo.png" />
         </Head>
         <main className={styles.container}>
-            <h1 className="text-3xl mb-4">Recent jobs</h1>
-
-            <div className="flex flex-col gap-3">
-                {
-                    jobsData.map(item => {
-                        return (
-                            <div className="p-3 border border-gray-300 rounded-lg" key={item.id}>
-                                <div className="flex flex-row justify-between mb-2">
-                                    <p className="font-bold text-lg">{item.data.title}</p>
-                                    <p>Salary: {item.data.wages}</p>
-                                </div>
-
-                                <div>
-                                    {item.data.desc}
-                                </div>
-
-                                <Link href={'jobs/'+item.data.url} className="bg-indigo-800 text-white text-2xl px-4 rounded-md">Job Details</Link>
+            {
+                jobsData.map(item => {
+                    return (
+                        <div className="p-3 border border-gray-300 rounded-lg" key={item.id}>
+                            <div className="flex flex-row justify-between mb-2">
+                                <p className="font-bold text-lg">{item.data.title}</p>
+                                <p>Salary: {item.data.wages}</p>
                             </div>
-                        )
-                    })
-                }
-            </div>
+
+                            <div>
+                                {item.data.desc}
+                            </div>
+
+                            <Link href={'jobs/'+item.data.url} className="bg-indigo-800 text-white text-2xl px-4 rounded-md">Job Details</Link>
+                        </div>
+                    )
+                })
+            }
         </main>
         </>
     )
