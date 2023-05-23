@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useState,useEffect,useContext } from 'react';
 import { AppContext } from '@/settings/context/appContext';
 import { GiMagnifyingGlass } from 'react-icons/gi';
+import Link from 'next/link';
 
 export default function Home() {
   const [screenHeight,setScreenHeight] = useState(0);
@@ -36,9 +37,9 @@ export default function Home() {
           </div>
 
           <div className={styles.otherActions}>
-            <button className={styles.quickFinder}>Recent jobs</button>
-            <button className={styles.quickFinder}>High paying jobs</button>
-            <button className={styles.quickFinder}>Closing soon</button>
+            <Link href='/jobs' className={styles.quickFinder}>Recent jobs</Link>
+            <Link href='#' className={styles.quickFinder}>High paying jobs</Link>
+            <Link href='#' className={styles.quickFinder}>Closing soon</Link>
           </div>
         </div>
       </main>
@@ -55,5 +56,5 @@ const styles = {
   searchBtn:'flex justify-center items-center bg-indigo-800 text-white px-3 py-5 rounded-full cursor-pointer',
   message:'text-center mt-2',
   otherActions:'flex flex-col md:flex-row gap-4 md:justify-center',
-  quickFinder:'md:w-[200px] h-[60px] md:h-[120px] bg-indigo-800 rounded-xl text-lg text-indigo-200'
+  quickFinder:'block flex justify-center items-center md:w-[200px] h-[60px] md:h-[120px] bg-indigo-800 rounded-xl text-lg text-indigo-200'
 }
