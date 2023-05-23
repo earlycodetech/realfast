@@ -1,8 +1,7 @@
-import { useState,useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { db } from "@/settings/firebase/firebase.setup";
-import { getDocs,collection } from "firebase/firestore";
+import { doc,getDocs,collection } from "firebase/firestore";
 
 //headless cms
 
