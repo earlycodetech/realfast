@@ -28,10 +28,6 @@ export default function MainNav() {
                 <li>
                     <Image width={30} height={38} src='/realfast_logo.png' alt='real fast logo'/>
                 </li>
-
-                <li className={navbarStyles.responsiveMenuItems}>
-                    <Link href='#' className={navbarStyles.navText}>Find Jobs</Link>
-                </li>
             </ul>
 
             <ul className={navbarStyles.navSection}>
