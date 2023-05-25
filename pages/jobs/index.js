@@ -55,13 +55,14 @@ export default function Jobs ({jobsData}) {
                                         ₦{numberWithCommas(item.data.wages)}
                                     </Typography>
                                     <Typography variant="body2">
-                                        well meaning and kindly.
-                                        <br />
-                                        {'"a benevolent smile"'}
+                                        {item.data.desc}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Learn More</Button>
+                                    <Button 
+                                    href={'jobs/'+item.data.url} 
+                                    size="small"
+                                    variant="contained">View Details</Button>
                                 </CardActions>
                             </Card>
                         )
