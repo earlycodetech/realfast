@@ -3,7 +3,9 @@ import Head from "next/head";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import { db } from "@/settings/firebase/firebase.setup";
-import { collection,addDoc,doc,setDoc } from "firebase/firestore";
+import { collection,addDoc } from "firebase/firestore";
+import { Spinner } from "react-activity";
+import "react-activity/dist/library.css";
 
 //create a validation schema (validation rules)
 const fieldsSchema = yup.object().shape({
@@ -15,8 +17,10 @@ const fieldsSchema = yup.object().shape({
 
 export default function PostJob () {
     const [screenHeight,setScreenHeight] = useState(0);
+    const [spinnerActivity,setSpinnerActivity] = useState(false);
 
     const handleFirestoreWriteDocument = async () => {
+        setSpinnerActivity(true);//start activity indicator
         await addDoc(collection(db,'jobs'),{
             title:values.jobTitle,
             desc:values.description,
@@ -24,12 +28,16 @@ export default function PostJob () {
             wages:values.wages,
             timestamp:new Date().getTime(),
             status:'active', 
-            url:values.jobTitle.toLowerCase().split(' ').join('-'),
+            url:values.jobTitle.replaceAll('/','').toLowerCase().split(' ').join('-'),
         })
         .then(() => {
+            setSpinnerActivity(false);//stop activity indicator
             console.log('Posted successfully');
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            setSpinnerActivity(false);//stop activity indicator
+            console.log(error);
+        });
     } 
 
     const {values,handleBlur,handleChange,errors,handleSubmit,touched } = useFormik({
@@ -116,7 +124,9 @@ export default function PostJob () {
                         }
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>Post Job</button>
+                    <button type="submit" className={styles.submitBtn} >
+                        { spinnerActivity ? <Spinner/> : 'Post Job' }
+                    </button>
                 </form>
             </div>
         </main>
@@ -131,6 +141,6 @@ const styles = {
     inputBlockMain:'w-full mb-4',
     label:'text-gray-500 mb-2',
     inputField:'w-full block border border-gray-200 py-5 px-4 rounded-full',
-    submitBtn:'w-full bg-indigo-800 py-5 px-4 rounded-full text-lg text-white',
+    submitBtn:'w-full flex justify-center bg-indigo-800 py-5 px-4 rounded-full text-lg text-white',
     formError:'text-xs',
 }
